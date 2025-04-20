@@ -47,7 +47,8 @@ document.addEventListener('DOMContentLoaded', function() {
         requestCodeBtn.disabled = true;
         requestCodeBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enviando...';
         
-        // Solicitar código al backend
+        const codeValue = document.getElementById('verificationCodeInput').value.trim();
+
         fetch('https://xblazcx.pythonanywhere.com/api/verify-code', {
             method: 'POST',
             headers: {
@@ -55,9 +56,10 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: JSON.stringify({
                 telegram_id: telegramId,
-                code: code
+                code: codeValue  // Usa la variable que acabamos de definir
             }),
         })
+        
         .then(response => response.json())
         .then(data => {
             requestCodeBtn.disabled = false;
@@ -99,8 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
         verifyCodeBtn.disabled = true;
         verifyCodeBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Verificando...';
         
-        const codeValue = document.getElementById('verificationCodeInput').value.trim();
-        // Ahora usa codeValue en lugar de code
+        // Verifica el código con el backend
         fetch('https://xblazcx.pythonanywhere.com/api/verify-code', {
             method: 'POST',
             headers: {
@@ -108,10 +109,9 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: JSON.stringify({
                 telegram_id: telegramId,
-                code: codeValue  // Usa la variable que acabamos de definir
+                code: verificationCode  // Usa la variable definida arriba
             }),
         })
-
         .then(response => response.json())
         .then(data => {
             verifyCodeBtn.disabled = false;
