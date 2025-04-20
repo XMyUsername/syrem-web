@@ -5,13 +5,19 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (token && userId) {
         // Verificar si la sesión es válida
-        fetch(`https://tu-backend.ejemplo.com/api/user-info?id=${userId}&token=${token}`)
+        fetch(`https://xblazcx.pythonanywhere.com/api/user-info?id=${userId}&token=${token}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     // Sesión válida, redirigir al panel
                     window.location.href = 'dashboard.html';
                 }
+            })
+            .catch(error => {
+                console.error("Error verificando sesión:", error);
+                // Opcional: Limpiar sesión inválida
+                localStorage.removeItem('token');
+                localStorage.removeItem('user_id');
             });
     }
     
