@@ -37,7 +37,7 @@ function loadUserInfo() {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('user_id');
     
-    fetch(`https://tu-backend.ejemplo.com/api/user-info?id=${userId}&token=${token}`)
+    fetch(`https://xblazcx.pythonanywhere.com/api/user-info?id=${userId}&token=${token}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -72,7 +72,7 @@ function loadUserFiles() {
     const filesList = document.getElementById('filesList');
     const noFilesMessage = document.getElementById('noFilesMessage');
     
-    fetch(`https://tu-backend.ejemplo.com/api/files?id=${userId}&token=${token}`)
+    fetch(`https://xblazcx.pythonanywhere.com/api/files?id=${userId}&token=${token}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -222,7 +222,7 @@ function handleFileUpload(file) {
     formData.append('token', token);
     
     const xhr = new XMLHttpRequest();
-    xhr.open('POST', 'https://tu-backend.ejemplo.com/api/upload', true);
+    xhr.open('POST', 'https://xblazcx.pythonanywhere.com/api/upload', true);
     
     // Actualizar barra de progreso
     xhr.upload.onprogress = function(e) {
@@ -305,7 +305,7 @@ function deleteFile(fileId) {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('user_id');
     
-    fetch('https://tu-backend.ejemplo.com/api/delete-file', {
+    fetch('https://xblazcx.pythonanywhere.com/api/delete-file', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
