@@ -1,0 +1,52 @@
+/* Estilos generales */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+footer {
+    margin-top: auto;
+}
+
+/* Estilos para la página de inicio */
+.hero {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a4bb5 100%);
+    color: white;
+    padding: 80px 0;
+}
+
+/* Estilos para la autenticación */
+.auth-step {
+    transition: all 0.3s ease;
+}
+
+/* Estilos para el panel de usuario */
+.upload-area {
+    background-color: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: 5px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-area:hover, .upload-area.dragover {
+    border-color: #0d6efd;
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+/* Animaciones */
+.btn {
+    transition: all 0.3s ease;
+}
+
+.card {
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
