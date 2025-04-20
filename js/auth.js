@@ -85,10 +85,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Evento para verificar código
     verifyCodeBtn.addEventListener('click', function() {
-        const code = verificationCodeInput.value.trim();
+        // Obtén el valor del input del código de verificación
+        const verificationCode = document.getElementById('verificationCode').value.trim();
         const telegramId = localStorage.getItem('temp_user_id');
         
-        if (!code) {
+        if (!verificationCode) {
             codeError.textContent = 'Por favor, ingresa el código de verificación.';
             codeError.classList.remove('d-none');
             return;
@@ -98,14 +99,15 @@ document.addEventListener('DOMContentLoaded', function() {
         verifyCodeBtn.disabled = true;
         verifyCodeBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Verificando...';
         
-        // Verificar código
-        fetch('https://xblazcx.pythonanywhere.com/api/request-code', {
+        // Verifica el código con el backend
+        fetch('https://xblazcx.pythonanywhere.com/api/verify-code', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                telegram_id: telegramId
+                telegram_id: telegramId,
+                code: verificationCode  // Usa la variable definida arriba
             }),
         })
         .then(response => response.json())
@@ -127,11 +129,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(error => {
+            console.error('Error:', error);
             verifyCodeBtn.disabled = false;
             verifyCodeBtn.textContent = 'Verificar código';
             codeError.textContent = 'Error de conexión. Verifica tu internet e inténtalo de nuevo.';
             codeError.classList.remove('d-none');
-            console.error('Error:', error);
         });
     });
     
