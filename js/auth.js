@@ -1,3 +1,4 @@
+// auth.js - Versión corregida
 document.addEventListener('DOMContentLoaded', function() {
     // Comprobar si ya hay sesión
     const token = localStorage.getItem('token');
@@ -15,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => {
                 console.error("Error verificando sesión:", error);
-                // Opcional: Limpiar sesión inválida
+                // Limpiar sesión inválida
                 localStorage.removeItem('token');
                 localStorage.removeItem('user_id');
             });
@@ -27,16 +28,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const telegramIdInput = document.getElementById('telegramId');
     const verificationCodeInput = document.getElementById('verificationCode');
     const requestCodeBtn = document.getElementById('requestCodeBtn');
+    const verifyCodeBtn = document.getElementById('verifyCodeBtn');
     const backToStep1 = document.getElementById('backToStep1');
     const idError = document.getElementById('idError');
-    const verifyCodeBtn = document.getElementById('verifyCodeBtn');
     const codeError = document.getElementById('codeError');
     
-    // Si alguno no existe, muestra en la consola para depuración
+    // Verificar que los elementos existen
+    if (!step1 || !step2) console.error('Contenedores de pasos no encontrados');
+    if (!telegramIdInput) console.error('Input de Telegram ID no encontrado');
+    if (!verificationCodeInput) console.error('Input de código de verificación no encontrado');
+    if (!requestCodeBtn) console.error('Botón de solicitar código no encontrado');
     if (!verifyCodeBtn) console.error('Botón de verificación no encontrado');
+    if (!backToStep1) console.error('Botón de volver atrás no encontrado');
+    if (!idError) console.error('Elemento de error de ID no encontrado');
     if (!codeError) console.error('Elemento de error de código no encontrado');
     
-    // Evento para solicitar código
+    // EVENTO PARA SOLICITAR CÓDIGO
     requestCodeBtn.addEventListener('click', function() {
         const telegramId = telegramIdInput.value.trim();
         
@@ -51,30 +58,16 @@ document.addEventListener('DOMContentLoaded', function() {
         requestCodeBtn.disabled = true;
         requestCodeBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enviando...';
         
-        const codeElement = document.getElementById('verificationCode');
-
-        // Comprueba si el elemento existe antes de intentar acceder a su valor
-        if (!codeElement) {
-            console.error('Elemento del código de verificación no encontrado');
-            codeError.textContent = 'Error en la página. Por favor, recarga.';
-            codeError.classList.remove('d-none');
-            verifyCodeBtn.disabled = false;
-            return;
-        }
-        
-        const codeValue = codeElement.value.trim();
-
-        fetch('https://xblazcx.pythonanywhere.com/api/verify-code', {
+        // Solicitar código al backend
+        fetch('https://xblazcx.pythonanywhere.com/api/request-code', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                telegram_id: telegramId,
-                code: codeValue  // Usa la variable que acabamos de definir
+                telegram_id: telegramId
             }),
         })
-        
         .then(response => response.json())
         .then(data => {
             requestCodeBtn.disabled = false;
@@ -86,6 +79,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 step2.classList.remove('d-none');
                 // Guardar ID para el siguiente paso
                 localStorage.setItem('temp_user_id', telegramId);
+                
+                // Para pruebas - mostrar alerta con el código
+                if (data.note && data.note.includes('123456')) {
+                    alert("Para pruebas, usa el código: 123456");
+                }
             } else {
                 idError.textContent = data.error || 'Error al enviar el código. Inténtalo de nuevo.';
                 idError.classList.remove('d-none');
@@ -100,10 +98,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Evento para verificar código
+    // EVENTO PARA VERIFICAR CÓDIGO
     verifyCodeBtn.addEventListener('click', function() {
-        // Obtén el valor del input del código de verificación
-        const verificationCode = document.getElementById('verificationCode').value.trim();
+        const verificationCode = verificationCodeInput.value.trim();
         const telegramId = localStorage.getItem('temp_user_id');
         
         if (!verificationCode) {
@@ -112,11 +109,17 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
+        if (!telegramId) {
+            codeError.textContent = 'Sesión inválida. Por favor, vuelve a empezar.';
+            codeError.classList.remove('d-none');
+            return;
+        }
+        
         codeError.classList.add('d-none');
         verifyCodeBtn.disabled = true;
         verifyCodeBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Verificando...';
         
-        // Verifica el código con el backend
+        // Verificar código con el backend
         fetch('https://xblazcx.pythonanywhere.com/api/verify-code', {
             method: 'POST',
             headers: {
@@ -124,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: JSON.stringify({
                 telegram_id: telegramId,
-                code: verificationCode  // Usa la variable definida arriba
+                code: verificationCode
             }),
         })
         .then(response => response.json())
