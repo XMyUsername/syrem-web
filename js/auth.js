@@ -42,13 +42,14 @@ document.addEventListener('DOMContentLoaded', function() {
         requestCodeBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enviando...';
         
         // Solicitar código al backend
-        fetch('https://tu-backend.ejemplo.com/api/request-code', {
+        fetch('https://xblazcx.pythonanywhere.com/api/verify-code', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                telegram_id: telegramId
+                telegram_id: telegramId,
+                code: code
             }),
         })
         .then(response => response.json())
@@ -98,8 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                telegram_id: telegramId,
-                code: code
+                telegram_id: telegramId
             }),
         })
         .then(response => response.json())
