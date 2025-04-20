@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
         verifyCodeBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Verificando...';
         
         // Verificar código
-        fetch('https://tu-backend.ejemplo.com/api/verify-code', {
+        fetch('https://xblazcx.pythonanywhere.com/api/request-code', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
