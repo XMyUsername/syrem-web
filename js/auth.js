@@ -27,10 +27,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const telegramIdInput = document.getElementById('telegramId');
     const verificationCodeInput = document.getElementById('verificationCode');
     const requestCodeBtn = document.getElementById('requestCodeBtn');
-    const verifyCodeBtn = document.getElementById('verifyCodeBtn');
     const backToStep1 = document.getElementById('backToStep1');
     const idError = document.getElementById('idError');
+    const verifyCodeBtn = document.getElementById('verifyCodeBtn');
     const codeError = document.getElementById('codeError');
+    
+    // Si alguno no existe, muestra en la consola para depuración
+    if (!verifyCodeBtn) console.error('Botón de verificación no encontrado');
+    if (!codeError) console.error('Elemento de error de código no encontrado');
     
     // Evento para solicitar código
     requestCodeBtn.addEventListener('click', function() {
@@ -47,7 +51,18 @@ document.addEventListener('DOMContentLoaded', function() {
         requestCodeBtn.disabled = true;
         requestCodeBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enviando...';
         
-        const codeValue = document.getElementById('verificationCodeInput').value.trim();
+        const codeElement = document.getElementById('verificationCode');
+
+        // Comprueba si el elemento existe antes de intentar acceder a su valor
+        if (!codeElement) {
+            console.error('Elemento del código de verificación no encontrado');
+            codeError.textContent = 'Error en la página. Por favor, recarga.';
+            codeError.classList.remove('d-none');
+            verifyCodeBtn.disabled = false;
+            return;
+        }
+        
+        const codeValue = codeElement.value.trim();
 
         fetch('https://xblazcx.pythonanywhere.com/api/verify-code', {
             method: 'POST',
